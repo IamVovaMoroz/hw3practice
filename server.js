@@ -8,11 +8,11 @@
 const mongoose = require("mongoose")
 
 const app = require('./app')
-
+const {DB_HOST} = require('./config')
 
 
 // подключаем по ссылке с mongoDB
-const DB_HOST = "mongodb+srv://VolodymyrM:NOni01041983@cluster0.ls7r7f1.mongodb.net/db-contacts"
+// const DB_HOST = "mongodb+srv://VolodymyrM:{password}@cluster0.ls7r7f1.mongodb.net/db-contacts"
 // при обновлении чтобы не скинуло
 mongoose.set('strictQuery', true)
 
