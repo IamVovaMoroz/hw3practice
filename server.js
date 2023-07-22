@@ -6,13 +6,14 @@
 
 // импортируем mongoose
 const mongoose = require("mongoose")
-require('dotenv').config();
+// если .env в основной папке то пишем require('dotenv').config()
+require('dotenv').config({ path: './environments/.env' });
 const app = require('./app')
 // const {DB_HOST} = require('./config')
 
 // проложили путь с DB_HOST, находящегося в  https://dashboard.render.com/ => Environment
 // const {DB_HOST} = process.env;
-const { DB_HOST, PORT } = process.env;
+const { DB_HOST, PORT = 3000 } = process.env;
 // настройки компа, где запускается проект https://dashboard.render.com/ => Environment  добавить изменяемое оркжение с компа данные
 // console.log(process.env.DB_HOST)
 
