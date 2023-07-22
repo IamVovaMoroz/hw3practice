@@ -2,8 +2,13 @@
 const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
-
+// импортируем dotenv 
+const dotenv = require('dotenv')
 const contactsRouter = require('./routes/api/contactsRoutes')
+
+// вызываем можно 1 строкой require(dotenv).config() который берёт данные с .env и добавляет их в process.env записывает ключ и значение
+dotenv.config()
+
 
 const app = express()
 
