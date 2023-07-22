@@ -15,6 +15,7 @@ const app = express()
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
 app.use(logger(formatsLogger))
+// для ограничения доступа
 app.use(cors())
 app.use(express.json())
 
