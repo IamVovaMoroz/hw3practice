@@ -6,13 +6,13 @@
 
 // импортируем mongoose
 const mongoose = require("mongoose")
-
+require('dotenv').config();
 const app = require('./app')
-const {DB_HOST} = require('./config')
+// const {DB_HOST} = require('./config')
 
 // проложили путь с DB_HOST, находящегося в  https://dashboard.render.com/ => Environment
-// const { DB_HOST } = process.env;
-
+// const {DB_HOST} = process.env;
+const { DB_HOST, PORT } = process.env;
 // настройки компа, где запускается проект https://dashboard.render.com/ => Environment  добавить изменяемое оркжение с компа данные
 // console.log(process.env.DB_HOST)
 
@@ -31,7 +31,8 @@ mongoose.set('strictQuery', true)
 // запуск сервера после успешно подсоединения к dataBase
 mongoose.connect(DB_HOST).then(() => {
   console.log("Database connection successful");
-  app.listen(3000)
+  app.listen(PORT)
+ 
 })
 .catch(error => {
   console.log("Database connection error:", error.message);
