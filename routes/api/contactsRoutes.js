@@ -10,16 +10,16 @@ const router = express.Router()
 // получение всего списка
 router.get('/', contactController.getContacts)
 
-// получение инф. по ид
-router.get('/:id', contactController.getContact)
+// // получение инф. по ид
+// router.get('/:id', contactController.getContact)
 
-// добавление контакта
-router.post('/', contactController.addNewContact)
+// // добавление контакта
+// router.post('/', contactController.addNewContact)
 
-// удаление контакта
-router.delete('/:id', contactController.deleteContact)
+// // удаление контакта
+// router.delete('/:id', contactController.deleteContact)
 
-// Обновление данных контакта  с выведением информ об отсутствующем элементе и всём body { message: "missing fields" }
-router.put('/:id', contactController.addChangeContact)
+// // Обновление данных контакта  с выведением информ об отсутствующем элементе и всём body { message: "missing fields" }
+// router.put('/:id', contactController.addChangeContact)
 
 module.exports = router

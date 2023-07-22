@@ -4,7 +4,8 @@ const logger = require('morgan')
 const cors = require('cors')
 // импортируем dotenv 
 const dotenv = require('dotenv')
-const contactsRouter = require('./routes/api/contactsRoutes')
+// удаляем router 1
+// const contactsRouter = require('./routes/api/contactsRoutes')
 
 // вызываем можно 1 строкой require(dotenv).config() который берёт данные с .env и добавляет их в process.env записывает ключ и значение
 dotenv.config()
@@ -19,7 +20,8 @@ app.use(logger(formatsLogger))
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/contacts', contactsRouter)
+// удаляем router 2
+// app.use('/api/contacts', contactsRouter)
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
