@@ -1,15 +1,15 @@
-// // contacts.js
-// const fs = require('fs/promises')
+// contacts.js
+const fs = require('fs/promises')
 
 // const { nanoid } = require('nanoid')
-// const path = require('path')
+const path = require('path')
 
-// const contactsPath = path.join(__dirname, '..', 'models', 'contacts.json')
+const contactsPath = path.join(__dirname, '..', 'models', 'contacts.json')
 
-// const listContacts = async () => {
-//   const data = await fs.readFile(contactsPath)
-//   return JSON.parse(data)
-// }
+const listContacts = async () => {
+  const data = await fs.readFile(contactsPath)
+  return JSON.parse(data)
+}
 
 // const getContactById = async id => {
 //   const contacts = await listContacts()
@@ -59,10 +59,10 @@
 //   return contacts[index]
 // }
 
-// module.exports = {
-//   listContacts,
-//   getContactById,
-//   removeContact,
-//   addContact,
-//   updateContact
-// }
+module.exports = {
+  listContacts,
+  // getContactById,
+  // removeContact,
+  // addContact,
+  // updateContact
+}

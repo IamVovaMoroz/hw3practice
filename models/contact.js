@@ -1,23 +1,24 @@
-const { model, Schema } = require('mongoose')
 
-// создаем схему
+const { model, Schema } = require('mongoose');
+
 const contactSchema = new Schema({
-  type: String,
-  required: [true, 'Set name for contact'],
+  name: {
+    type: String,
+    required: true, 
+  },
   email: {
-    type: String
+    type: String,
+    required: true, 
   },
   phone: {
-    type: String
+    type: String,
+    required: true, 
   },
   favorite: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-// создаем модель 'Contact' - название колекции в един. числе
-
-const Contact = model('Contact', contactSchema)
-// экспортируем и импортируем в контролер
-module.exports = Contact
+const Contact = model('Contact', contactSchema);
+module.exports = Contact;
