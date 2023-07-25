@@ -2,25 +2,17 @@
 const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
-// импортируем dotenv 
-const dotenv = require('dotenv')
-// удаляем router 1
+
 const contactsRouter = require('./routes/api/contactsRoutes')
-
-// вызываем можно 1 строкой require(dotenv).config() который берёт данные с .env и добавляет их в process.env записывает ключ и значение
-dotenv.config()
-
 
 const app = express()
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
 app.use(logger(formatsLogger))
-// для ограничения доступа
 app.use(cors())
 app.use(express.json())
 
-// удаляем router 2
 app.use('/api/contacts', contactsRouter)
 
 app.use((req, res) => {
