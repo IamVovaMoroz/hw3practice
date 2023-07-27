@@ -55,7 +55,7 @@ const comparePassword = await bcrypt.compare(password, user.password)
 if(!comparePassword){
   return res.status(401).json({ message: "Email or password invalid" });
 }
-// если пароль совпал, создаем токен и отправляем
+// если пароль совпал, создаем токен и отправляем!
 const token = "vdvxaxxsxqq.c4fdrrf444f.vjjbv89"
 
 res.json({token})
