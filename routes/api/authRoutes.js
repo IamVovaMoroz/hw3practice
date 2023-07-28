@@ -59,7 +59,7 @@ router.post('/register', (req, res) => {
   authController.register(req, res);
 });
 
-// Login
+// Login  http://localhost:3000/api/auth/login получаем токен
 
 router.post('/login', (req, res) => {
     authController.login(req, res);
