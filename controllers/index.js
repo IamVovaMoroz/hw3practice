@@ -1,3 +1,3 @@
 const register = require('./authController')
-
-module.exports = {register}
+const login = require('./authController')
+module.exports = {register, login}
