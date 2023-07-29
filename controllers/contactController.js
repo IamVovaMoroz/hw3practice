@@ -4,9 +4,25 @@ const { Contact } = require('../models/contact')
 
 const { contactSchema, updateFavoriteSchema } = require('../schemas/index')
 
+// console.log(req.user) получить данные о пользователя соверш действия из authenticate (для админа)
 const getContacts = async (req, res, next) => {
+  const { _id: owner } = req.user;
+  // для получения параметров поиска нужно обратится к req.query - тут содержаться все параметры поиска => { page: '5', limit: '10' }
+  // console.log(req.query) 
+  // const {page = 1, limit = 10} = req.query  сразу пишем значение по умолчанию
+  const {page = 1, limit = 10} = req.query
+  // получаем значение сколько пропустить skip
+  const skip = (page - 1) * limit
   try {
-    const result = await Contact.find()
+    // получаем все контакты базы  const result = await Contact.find()
+    
+    // получаем только контакты добавленные пользователем  const result = await Contact.find({owner})   (для пользователя)
+
+    // const result = await Contact.find({owner}, "-createdAt -updatedAt")
+    // для получения всей информации по пользователю populate("owner") запишет весь обьект в owner пользователя. 2 аргументом можно передать поля что нужно вернуть ("owner","  email favorite")
+    // {skip: 2, limit: 2} skip сколько пропустить с базы контактов, limit - сколько вернуть
+    
+    const result = await Contact.find({owner}, "-createdAt -updatedAt", {skip, limit}).populate("owner")
     res.json(result)
   } catch (error) {
     next(error)
@@ -27,6 +43,9 @@ const getContact = async (req, res, next) => {
 }
 
 const addNewContact = async (req, res) => {
+  // для записи каждой книги за конкретным человеком    
+  const { _id: owner } = req.user;
+
   try {
     const { error } = contactSchema.validate(req.body)
     if (error) {
@@ -45,8 +64,9 @@ const addNewContact = async (req, res) => {
         .status(400)
         .json({ message: `missing required ${missingField} field` })
     }
-    const newContact = await Contact.create(req.body)
-
+    // распыляем обьект и добавляем новое значение owner
+    const newContact = await Contact.create({...req.body, owner})
+    // const newContact = await Contact.create(req.body)
     res.status(201).json(newContact)
   } catch (error) {
     res.status(500).json({ message: 'Server error' })

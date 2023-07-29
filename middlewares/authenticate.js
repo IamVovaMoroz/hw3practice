@@ -7,9 +7,12 @@
 
 // const authenticate = async (req, res, next) => {
 //     // достаем данные из запроса
-//   const { authenticate ="" } = req.headers
+//   const { authenticate = "" } = req.headers
 // // достаем данные bearer, token authenticate.split(" ") разделит bearer в bearer и token в токен
 //   const [bearer, token] = authenticate.split(" ")
+// // const bearer = "Bearer"
+// // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YzNjYWJlMzZkYmY5YTNlOGQ4MTU4OCIsImlhdCI6MTY5MDU2MDE4OSwiZXhwIjoxNjkwNjQyOTg5fQ.iE7fAHc8sc9VUHOiBmIJCNAS7FtCgjMKiFxGXRi8-FI"
+
 //   if(bearer !== "Bearer") {
 // return res.status(401)
 // // next (HttpError(401))  
@@ -22,7 +25,8 @@
 //     const user = await User.findById(id)
 // if(!user){
 //     // или токен написать не валидный или User нет такого или ошибку
-//     return res.status(401)
+//     // return res.status(401)
+//     return res.status(401).json({ message: "" });
 // }
 // // если всё хорошо то идём дальше
 // next()
@@ -30,6 +34,118 @@
 // }
 
 // module.exports = authenticate
+
+
+
+
+
+// SUPERRRRR-------------------------------
+const jwt = require('jsonwebtoken');
+const { SECRET_KEY } = process.env;
+const { User } = require('../models/user');
+
+
+const authenticate = async (req, res, next) => {
+  const { authorization = "" } = req.headers;
+  console.log("Bearer: ", authorization.split(" ")[0]);
+    console.log("Token: ", authorization.split(" ")[1]);
+  if (!authorization.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const token = authorization.split(" ")[1];
+
+  try {
+    const { id } = jwt.verify(token, SECRET_KEY);
+    const user = await User.findById(id);
+// если не user, если нет токена или токен не равен выданному. Те. только 1 токен у человека может быть
+    if (!user || !user.token || user.token || token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    // Сохраняем аутинф пользователя для дальн. использования
+    req.user = user;
+
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+};
+
+module.exports = authenticate;
+
+// =====================================
+
+// const jwt = require('jsonwebtoken');
+// const { SECRET_KEY } = process.env;
+// const { User } = require('../models/user');
+
+// const HttpError = (status, message) => {
+//   const error = new Error(message);
+//   error.status = status;
+//   return error;
+// };
+
+// const authenticate = async (req, res, next) => {
+//   const { authenticate = "" } = req.headers;
+//   const [bearer, token] = authenticate.split(" ");
+
+//   if (bearer !== "Bearer") {
+//     return next(new HttpError(401, "Нет авторизации")); // Unauthorized access
+//   }
+
+//   try {
+//     const { id } = jwt.verify(token, SECRET_KEY);
+//     const user = await User.findById(id);
+
+//     if (!user) {
+//       return next(new HttpError(401, "Несуществующий пользователь")); // Unauthorized access
+//     }
+
+//     // Сохраняем аутентифицированного пользователя в объекте запроса (req) для дальнейшего использования в других middleware или маршрутах
+//     req.user = user;
+
+//     next();
+//   } catch (error) {
+//     return next(new HttpError(401, "Недействительный токен")); // Unauthorized access
+//   }
+// };
+
+// module.exports = authenticate;
+
+
+
+
+
+// const jwt = require('jsonwebtoken')
+// const { SECRET_KEY } = process.env
+// const { User } = require('../models/user')
+
+// const authenticate = async (req, res, next) => {
+//     const { authenticate = "" } = req.headers;
+//   const [bearer, token] = authenticate.split(" ")
+
+//   if (bearer !== "Bearer") {
+//     return res.status(401).json({ message: "Invalid token format" });
+//   }
+
+//   try {
+//     const { id } = jwt.verify(token, SECRET_KEY);
+//     const user = await User.findById(id);
+
+//     if (!user) {
+//       return res.status(401).json({ message: "Invalid token" });
+//     }
+
+//     next();
+//   } catch (error) {
+//     return res.status(401).json({ message: "Invalid token" });
+//   }
+// };
+
+// module.exports = authenticate;
+
+
 
 // const jwt = require('jsonwebtoken');
 // const { User } = require('../models/user');
@@ -58,6 +174,8 @@
 //     return res.status(401).json({ message: "Unauthorized user" });
 //   }
 // };
+
+// ------------------------------------------------------------
 
 // module.exports = authenticate;
 // const jwt = require('jsonwebtoken');
@@ -136,47 +254,51 @@
 // // для провеки есть ли user с токеном в базе
 // const {User} = require('../models/user')
 
-const {SECRET_KEY} = process.env
-const jwt = require('jsonwebtoken');
-const { User } = require('../models/user');
 
-const authenticate = async (req, res, next) => {
-  console.log('Authenticate middleware started');
+// ---------------------------------------------------
 
-  const { authenticate = "" } = req.headers;
-  console.log('authenticate header:', authenticate);
 
-//   const [bearer, token] = authenticate.split(" ");
+// const {SECRET_KEY} = process.env
+// const jwt = require('jsonwebtoken');
+// const { User } = require('../models/user');
 
-  const bearer = "Bearer"
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YzNjYWJlMzZkYmY5YTNlOGQ4MTU4OCIsImlhdCI6MTY5MDU2MDE4OSwiZXhwIjoxNjkwNjQyOTg5fQ.iE7fAHc8sc9VUHOiBmIJCNAS7FtCgjMKiFxGXRi8-FI"
+// const authenticate = async (req, res, next) => {
+//   console.log('Authenticate middleware started');
 
-  console.log('bearer:', bearer);
-  console.log('token:', token);
+//   const { authenticate = "" } = req.headers;
+//   console.log('authenticate header:', authenticate);
 
-  if (bearer !== "Bearer") {
-    console.log('Invalid token format');
-    return res.status(401).json({ message: "Invalid token format" });
-  }
+// //   const [bearer, token] = authenticate.split(" ");
 
-  try {
-    // Проверяем токен с помощью SECRET_KEY
-    const { id } = jwt.verify(token, SECRET_KEY);
-    console.log('Decoded user ID:', id);
+//   const bearer = "Bearer"
+//   const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YzNjYWJlMzZkYmY5YTNlOGQ4MTU4OCIsImlhdCI6MTY5MDU2MDE4OSwiZXhwIjoxNjkwNjQyOTg5fQ.iE7fAHc8sc9VUHOiBmIJCNAS7FtCgjMKiFxGXRi8-FI"
 
-    // Проверяем, что пользователь с таким ID существует
-    const user = await User.findById(id);
-    if (!user) {
-      console.log('User not found');
-      return res.status(401).json({ message: "Invalid token" });
-    }
+// //   console.log('bearer:', bearer);
+// //   console.log('token:', token);
 
-    // Если все проверки прошли успешно, пропускаем запрос дальше
-    next();
-  } catch (error) {
-    console.log('Token verification failed:', error.message);
-    return res.status(401).json({ message: "Invalid token" });
-  }
-};
+//   if (bearer !== "Bearer") {
+//     console.log('Invalid token format');
+//     return res.status(401).json({ message: "Invalid token format" });
+//   }
 
-module.exports = authenticate;
+//   try {
+//     // Проверяем токен с помощью SECRET_KEY
+//     const { id } = jwt.verify(token, SECRET_KEY);
+//     console.log('Decoded user ID:', id);
+
+//     // Проверяем, что пользователь с таким ID существует
+//     const user = await User.findById(id);
+//     if (!user) {
+//       console.log('User not found');
+//       return res.status(401).json({ message: "Invalid token" });
+//     }
+
+//     // Если все проверки прошли успешно, пропускаем запрос дальше
+//     next();
+//   } catch (error) {
+//     console.log('Token verification failed:', error.message);
+//     return res.status(401).json({ message: "Invalid token" });
+//   }
+// };
+
+// module.exports = authenticate;
