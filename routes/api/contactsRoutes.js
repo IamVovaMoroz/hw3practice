@@ -41,18 +41,18 @@ const router = express.Router()
 router.get('/', authenticate, contactController.getContacts)
 
 // получение инф. по ид
-router.get('/:id',isValidId, contactController.getContact)
+router.get('/:id', authenticate, isValidId, contactController.getContact)
 
 // // добавление контакта
-router.post('/',  contactController.addNewContact)
+router.post('/', authenticate, contactController.addNewContact)
 
 // // удаление контакта
-router.delete('/:id', isValidId, contactController.deleteContact)
+router.delete('/:id', authenticate, isValidId, contactController.deleteContact)
 
 // // Обновление данных контакта  с выведением информ об отсутствующем элементе и всём body { message: "missing fields" }
 router.put('/:id', isValidId, contactController.addChangeContact)
 
 // переключатель favorite маршрут
-router.patch('/:id/favorite',  isValidId, contactController.addChangeFavorite)
+router.patch('/:id/favorite', authenticate, isValidId, contactController.addChangeFavorite)
 
 module.exports = router

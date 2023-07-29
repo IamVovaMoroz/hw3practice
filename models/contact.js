@@ -20,6 +20,12 @@ const contactSchema = new Schema(
     favorite: {
       type: Boolean,
       default: false
+    },
+    // cохраняем тут ИД, генерируемые MongoDB, ref название коллекции user
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true
     }
   },
   // для добавления времени Event

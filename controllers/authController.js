@@ -63,9 +63,15 @@ if(!comparePassword){
 // создаем токен payload данные user
 const payload = {
   id: user._id,
+  name: user.name,
+  email : user.email,
 }
 
 const token = jwt.sign(payload, SECRET_KEY, {expiresIn: "23h"})
+
+// сохраняем при login наш login  для последующего logout
+
+await User.findByIdAndUpdate(user._id, {token})
 
 // если пароль совпал, создаем токен и отправляем!
 // console.log(token)
@@ -73,10 +79,32 @@ const token = jwt.sign(payload, SECRET_KEY, {expiresIn: "23h"})
 res.json({token})
 
 }
+// получаем email, name из req.user и отправляем их
+const getCurrent = async (req, res) => {
+  const {email, name} = req.user;
+// const {email, name, id} = req.user;
+// console.log("Email:", email);
+// console.log("Name:", name);
+// console.log("id:", id);
+res.json({email, name})
+}
+
+
+const logout = async (req, res) => {
+
+  const {_id} = req.user;
+// при logout делаем token: ""
+  await User.findByIdAndUpdate(_id,  {token: ""})
+
+  res.json({message: "Logout success"})
+}
 
 module.exports = {
+  // register: register
   register,
-  login
+  login,
+  getCurrent,
+  logout
 }
 
 

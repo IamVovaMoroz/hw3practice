@@ -92,6 +92,11 @@ const userSchema = new Schema(
       enum: ['starter', 'pro', 'business'],
       default: 'starter',
     },
+    // для logOut token строка, не обязательный параметр
+    token: {
+        type: String, 
+        default: ""
+    }
   },
   // Для добавления времени Event
   { versionKey: false, timestamps: true }

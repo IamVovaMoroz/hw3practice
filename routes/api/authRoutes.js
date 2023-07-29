@@ -51,6 +51,8 @@ const express = require('express');
 const authController = require('../../controllers/authController');
 // const { schemas } = require('../../models/user');
 
+const { authenticate } = require('../../middlewares/index')
+
 const router = express.Router();
 
 // Маршрут для регистрации /api/auth/register
@@ -61,9 +63,23 @@ router.post('/register', (req, res) => {
 
 // Login  http://localhost:3000/api/auth/login получаем токен
 
+
+
+
 router.post('/login', (req, res) => {
     authController.login(req, res);
   });
+
+  // маршрут current для возобновления токена пишем путь
+
+  router.get("/current", authenticate,  (req, res) => {
+    authController.getCurrent(req, res);
+  })
+// маршрут для logout
+  router.post("/logout",  authenticate, (req, res) => {
+    authController.logout(req, res);
+  } )
+
 
 module.exports = router;
 
