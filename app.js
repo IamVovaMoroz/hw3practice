@@ -43,8 +43,8 @@ const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 app.use(logger(formatsLogger))
 app.use(cors())
 app.use(express.json())
-
-app.use('/api/auth', authRouter) // Роутер для авторизации
+app.use('/users', authRouter); // Роутер для авторизации начинается с users
+// app.use('/api/auth', authRouter) // Роутер для авторизации
 app.use('/api/contacts', contactsRouter)
 
 app.use((req, res) => {
