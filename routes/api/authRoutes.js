@@ -51,7 +51,7 @@ const express = require('express');
 const authController = require('../../controllers/authController');
 // const { schemas } = require('../../models/user');
 
-const { authenticate } = require('../../middlewares/index')
+const { authenticate, upload } = require('../../middlewares/index')
 
 const router = express.Router();
 
@@ -78,6 +78,12 @@ router.post('/login', (req, res) => {
 // маршрут для logout
   router.post("/logout",  authenticate, (req, res) => {
     authController.logout(req, res);
+  } )
+
+  // маршрут для добавления аватарки пользователем
+
+  router.patch('/avatars',  authenticate, upload.single('avatar'), (req, res) => {
+    authController.updateAvatar(req, res);
   } )
 
 
