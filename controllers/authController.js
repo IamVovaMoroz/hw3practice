@@ -114,6 +114,8 @@ const updateAvatar = async (req, res) => {
   const {_id} = req.user
 // импортируем путь и название
   const { path: tempUpload, originalname } = req.file
+
+
 // импортируем где будет сохраняться 
 const resultUpload = path.join(avatarDir, originalname)
 // перемещаем , указывая старое и новое место с fs.rename
