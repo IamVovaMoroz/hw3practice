@@ -1,10 +1,19 @@
 // const { HttpError } = require("../helpers/HttpError");
 const { schemas, User } = require("../models/user");
 const jwt = require('jsonwebtoken')
+const path = require('path');
+// для временной аватарки
+const gravatar = require('gravatar')
+// используем fs для перемещения
+const fs = require('fs/promises')
+
 // пакет для хеширования пароля
 const bcrypt = require("bcrypt")
 
 const {SECRET_KEY} = process.env
+
+const avatarDir = path.join(__dirname, '../', 'public', 'avatars')
+
 // console.log(SECRET_KEY)
 const register = async (req, res) => {
   try {
@@ -20,14 +29,17 @@ if (user) {
 
 const hashPassword = await bcrypt.hash(password, 10)
 
+// передаем email человека и мы получаем аватар начальный
+const avatarURL = gravatar.url(email)
+
     // Проверяем, что данные соответствуют схеме
     const { error } = schemas.registerSchema.validate({ email, password });
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    // Создаем нового пользователя в базе данных
-    const newUser = await User.create({ ...req.body, password: hashPassword });
+    // Создаем нового пользователя в базе данных с аватаркой
+    const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL  });
 
     // Отправляем успешный ответ с данными о новом пользователе и статус 201 добавляем
     res.status(201).json({
@@ -89,7 +101,6 @@ const getCurrent = async (req, res) => {
 res.json({email, name})
 }
 
-
 const logout = async (req, res) => {
 
   const {_id} = req.user;
@@ -99,12 +110,30 @@ const logout = async (req, res) => {
   res.json({message: "Logout success"})
 }
 
+const updateAvatar = async (req, res) => {
+  const {_id} = req.user
+// импортируем путь и название
+  const { path: tempUpload, originalname } = req.file
+
+
+// импортируем где будет сохраняться 
+const resultUpload = path.join(avatarDir, originalname)
+// перемещаем , указывая старое и новое место с fs.rename
+await fs.rename(tempUpload, resultUpload)
+// Записываем новый путь в базу. получаем ид и отправляем новый путь к avatarURL
+const avatarURL = path.join('avatars', originalname)
+await User.findByIdAndUpdate(_id, {avatarURL})
+// отправляем
+res.json(avatarURL)
+}
+
 module.exports = {
   // register: register
   register,
   login,
   getCurrent,
-  logout
+  logout,
+  updateAvatar
 }
 
 
